@@ -1,0 +1,33 @@
+/* Sets the default font for the entire page */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Styles for the main content cards */
+.card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Gradient background for the results card */
+.results-card {
+     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Primary button style */
+.btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+
+/* Hover state for the primary button */
+.btn-primary:hover {
+    background-color: #4338ca;
+}
+
+/* Utility to hide elements */
+.hidden {
+    display: none;
+}

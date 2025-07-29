@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incentive Calculator</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full mx-auto">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Incentive Policy Calculator</h1>
+        <p class="text-center text-gray-500 mb-8">Enter your achievements to calculate your potential incentive.</p>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input Card -->
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6">Your Performance</h2>
+                
+                <!-- Targets Display -->
+                <div class="grid grid-cols-2 gap-4 mb-6 bg-gray-50 p-4 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-500">NRV Target</p>
+                        <p class="text-lg font-semibold text-gray-800">₹ 30,00,000</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">ER Target</p>
+                        <p class="text-lg font-semibold text-gray-800">₹ 4,50,000</p>
+                    </div>
+                </div>
+
+                <!-- Input Fields -->
+                <div class="space-y-4">
+                    <div>
+                        <label for="nrvActual" class="block text-sm font-medium text-gray-700">Actual NRV Achieved</label>
+                        <input type="number" id="nrvActual" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., 2250000">
+                    </div>
+                    <div>
+                        <label for="erActual" class="block text-sm font-medium text-gray-700">Actual ER Achieved</label>
+                        <input type="number" id="erActual" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., 337500">
+                    </div>
+                    <div>
+                        <label for="erNewCustomers" class="block text-sm font-medium text-gray-700">ER from New Customers</label>
+                        <input type="number" id="erNewCustomers" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., 300000">
+                    </div>
+                </div>
+
+                <!-- Conditions -->
+                <div class="mt-6">
+                     <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="sihCondition" name="sihCondition" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="sihCondition" class="font-medium text-gray-700">Zero Stock-in-Hand (S.I.H.) confirmed</label>
+                            <p class="text-gray-500">This is required to qualify for any incentive.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calculateBtn" class="mt-8 w-full btn-primary font-bold py-3 px-4 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+                    Calculate Incentive
+                </button>
+            </div>
+
+            <!-- Results Card -->
+            <div id="results" class="card p-6 md:p-8 results-card hidden">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Calculation Results</h2>
+                
+                <div id="sihWarning" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md">
+                    <p class="font-bold">Qualification Issue</p>
+                    <p>You must have zero Stock-in-Hand (S.I.H.) to be eligible for an incentive.</p>
+                </div>
+
+                <div id="resultsContent" class="space-y-4">
+                    <!-- Achievement Percentages -->
+                    <div class="bg-white/60 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-600 mb-2">Achievement Level</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700">NRV Achievement:</span>
+                            <span id="nrvPercent" class="font-bold text-lg text-gray-800">0%</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-gray-700">ER Achievement:</span>
+                            <span id="erPercent" class="font-bold text-lg text-gray-800">0%</span>
+                        </div>
+                        <hr class="my-2 border-gray-300">
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-gray-700 font-bold">Final Achievement Tier:</span>
+                            <span id="finalAchievementTier" class="font-bold text-xl text-indigo-600">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Incentive Breakdown -->
+                    <div class="bg-white/60 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-600 mb-2">Incentive Breakdown</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700">NRV Incentive:</span>
+                            <span id="nrvIncentive" class="font-bold text-lg text-gray-800">₹ 0</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-gray-700">ER Incentive:</span>
+                            <span id="erIncentive" class="font-bold text-lg text-gray-800">₹ 0</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-gray-700">New Customer Booster:</span>
+                            <span id="boosterIncentive" class="font-bold text-lg text-green-600">₹ 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Total Incentive -->
+                    <div class="bg-green-100 p-4 rounded-lg text-center">
+                        <p class="text-sm font-medium text-green-800">Total Earned Incentive</p>
+                        <p id="totalIncentive" class="text-4xl font-bold text-green-700 mt-1">₹ 0</p>
+                    </div>
+
+                    <!-- Payout Schedule -->
+                    <div class="bg-white/60 p-4 rounded-lg">
+                        <h3 class="font-semibold text-gray-600 mb-2">Payout Schedule</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700">50% paid on M+1 basis:</span>
+                            <span id="payout1" class="font-bold text-lg text-gray-800">₹ 0</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-gray-700">Remaining 50% after dispatch:</span>
+                            <span id="payout2" class="font-bold text-lg text-gray-800">₹ 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Terms & Conditions Section -->
+        <div class="card mt-8 p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Terms Summary</h3>
+            <ul class="space-y-3 text-gray-600 list-disc list-inside">
+                <li><span class="font-semibold">New Customer Booster:</span> If more than 60% of ER comes from new customers, an additional 3% of ER will be paid as incentive.</li>
+                <li><span class="font-semibold">Ancillary Charges:</span> Any sort of ancillary or value-added charges will be included in NRV calculation.</li>
+                <li><span class="font-semibold">Minimum Monthly Performance:</span> A BDM must achieve minimum 50% of both NRV and ER targets in at least two out of the three months within the evaluation quarter to qualify for quarterly incentive.</li>
+                 <li><span class="font-semibold">Exception:</span> If a BDM overachieves (i.e., exceeds 100% of NRV & ER targets) in one month, but fails to meet the 50% threshold in the remaining two months, incentive will be paid only for that one month.</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Link to your JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
