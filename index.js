@@ -92,7 +92,16 @@ function calculateIncentive() {
 
     resultsDiv.classList.remove('hidden');
 
-    // 2. Check S.I.H. condition
+    // 2. Validate: ER New Customers should not exceed ER Actual
+    if (erNewCustomers > erActual) {
+        alert("Error: ER from New Customers cannot exceed ER Actual.");
+        updateUI(0, 0, 0, 0, 0, 0, 0);
+        resultsContentDiv.classList.add('hidden');
+        sihWarningDiv.classList.add('hidden');
+        return;
+    }
+
+    // 3. Check S.I.H. condition
     if (!isSihMet) {
         sihWarningDiv.classList.remove('hidden');
         resultsContentDiv.classList.add('hidden');
@@ -103,23 +112,22 @@ function calculateIncentive() {
     sihWarningDiv.classList.add('hidden');
     resultsContentDiv.classList.remove('hidden');
 
-    // 3. Calculate achievement percentages
+    // 4. Calculate achievement percentages
     const nrvAchievedPercent = (nrvActual / NRV_TARGET) * 100;
     const erAchievedPercent = (erActual / ER_TARGET) * 100;
 
-    // 4. Determine the final achievement tier (the lower of the two) for display purposes
+    // 5. Determine the final achievement tier (the lower of the two)
     const finalAchievementPercent = Math.min(nrvAchievedPercent, erAchievedPercent);
     const finalTier = getAchievementTier(finalAchievementPercent);
 
-    // Also determine individual tiers for calculation
+    // Also determine individual tiers
     const nrvTier = getAchievementTier(nrvAchievedPercent);
     const erTier = getAchievementTier(erAchievedPercent);
-
 
     let nrvIncentive = 0;
     let erIncentive = 0;
 
-    // 5. Get the fixed incentive amounts based on their individual tiers
+    // 6. Get fixed incentive amounts
     if (nrvTier > 0) {
         nrvIncentive = nrvFixedIncentives[nrvTier] || 0;
     }
@@ -127,7 +135,7 @@ function calculateIncentive() {
         erIncentive = erFixedIncentives[erTier] || 0;
     }
 
-    // 6. Calculate New Customer Booster
+    // 7. Calculate New Customer Booster
     let boosterIncentive = 0;
     if (erActual > 0) {
         const newCustomerRatio = erNewCustomers / erActual;
@@ -136,10 +144,10 @@ function calculateIncentive() {
         }
     }
 
-    // 7. Calculate total incentive
+    // 8. Calculate total incentive
     const totalIncentive = nrvIncentive + erIncentive + boosterIncentive;
 
-    // 8. Update the UI with the results
+    // 9. Update the UI
     updateUI(
         nrvAchievedPercent,
         erAchievedPercent,
